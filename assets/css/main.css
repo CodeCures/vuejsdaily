@@ -1,0 +1,11 @@
+body {
+    @apply min-h-screen bg-white dark:bg-gray-900 dark:text-gray-200;
+}
+
+h1 {
+    @apply text-2xl font-bold tracking-wider;
+}
+
+.car-image {
+    @apply w-[100px]
+}
