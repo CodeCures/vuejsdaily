@@ -1,16 +1,17 @@
+import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import type { LevelKey } from "~/types";
 
 const excludeUnwantedValues: string = `do not add any additional text before or after the object. return the object as it is. do not add any markdown sytanx highlighting like ${'```json'}, ${'```js'}, ${'```javascript'} and do not assign the response to a variable`;
 
-export function generateCourseContent() {
+export function generateCourseContentPrompt(technology: string, level: string) {
     return [
-        { role: "system", content: "Generate a beginner-friendly course name for learning Vue.js. Return the response in JSON format with the structure: { courseName: 'namestring', modules: [ { name: 'moduleName', lessons: [ {name: 'lessonName', content: null} ] } ] }" },
-        { role: "user", content: "Generate a beginner-friendly course name for learning Vue.js. The course should appeal to individuals with basic knowledge of web development and aim to teach them fundamental Vue.js concepts in an accessible way." },
-        { role: "system", content: "Create a structured outline for a beginner-friendly Vue.js course." },
-        { role: "user", content: "Create a structured outline for a beginner-friendly Vue.js course. The course should be divided into modules, each covering essential concepts and techniques in Vue.js. Focus on providing clear explanations and practical examples to help learners grasp the material effectively." },
-        { role: "system", content: "Develop lessons for each module of a beginner-friendly Vue.js course." },
-        { role: "user", content: "Develop lessons for each module of a beginner-friendly Vue.js course. Each lesson should cover a specific topic within Vue.js, starting from the basics and gradually progressing to more advanced concepts. Ensure that the content is easy to understand for individuals with basic web development knowledge and includes hands-on exercises or projects to reinforce learning." }
-    ];
+        { role: "system", content: `Generate a ${level}-friendly course name for learning ${technology}. Return the response in JSON format with the structure: { courseName: 'namestring', modules: [ { name: 'moduleName', lessons: [ {name: 'lessonName', content: null} ] } ] }` },
+        { role: "user", content: `Generate a ${level}-friendly course name for learning ${technology}. The course should appeal to individuals with basic knowledge of web development and aim to teach them fundamental ${technology} concepts in an accessible way.` },
+        { role: "system", content: `Create a structured outline for a ${level}-friendly ${technology} course.` },
+        { role: "user", content: `Create a structured outline for a ${level}-friendly ${technology} course. The course should be divided into modules, each covering essential concepts and techniques in ${technology}. Focus on providing clear explanations and practical examples to help learners grasp the material effectively.` },
+        { role: "system", content: `Develop lessons for each module of a ${level}-friendly ${technology} course.` },
+        { role: "user", content: `Develop lessons for each module of a ${level}-friendly ${technology} course. Each lesson should cover a specific topic within ${technology}, starting from the basics and gradually progressing to more advanced concepts. Ensure that the content is easy to understand for individuals with basic web development knowledge and includes hands-on exercises or projects to reinforce learning.` }
+    ] as ChatCompletionMessageParam[];
 }
 
 

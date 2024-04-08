@@ -15,7 +15,7 @@ export class AIClient {
         this._openai = new OpenAI({
             apiKey: apiKey,
             dangerouslyAllowBrowser: true
-        });;
+        });
     }
     async generateContent(prompt: string) {
 

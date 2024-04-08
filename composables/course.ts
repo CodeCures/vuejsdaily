@@ -20,14 +20,12 @@ export function useCourse() {
     const isGeneratingCourseName = ref(false);
     const hasGeneratedCourseName = ref(false);
 
-    const generateCourseName = async (tag: string, level: LevelKey) => {
+    const generateCourseContent = async (technology: string, level: string) => {
         isGeneratingCourseName.value = true;
         hasGeneratedCourseName.value = false;
 
         const { $ai } = useNuxtApp();
-        const res = await $ai.generateContent(generateCourseNamePrompt(tag, level))
-
-        course.value = JSON.parse(res.choices[0].message.content as string);
+        course.value = await $ai.generateUsingObject(generateCourseContentPrompt(technology, level))
 
         isGeneratingCourseName.value = false;
         hasGeneratedCourseName.value = true;
@@ -97,7 +95,7 @@ export function useCourse() {
         fetchCourses,
         currentCourse,
         regenerateCourse,
-        generateCourseName,
+        generateCourseContent,
         currentCourseIndex,
         isGeneratingCourseName,
         hasGeneratedCourseName,

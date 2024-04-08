@@ -6,7 +6,7 @@ import { generateCourseContent } from '~/utils/aiprompts';
 const result = await markdownParser.parse(null, data.content)
 const { $ai } = useNuxtApp()
 
-const response = await $ai.generateUsingObject(generateCourseContent());
+const response = await $ai.generateUsingObject(generateCourseContent('Vue js', 'beginner'));
 
 console.log(response);
 </script>
