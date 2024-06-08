@@ -11,17 +11,17 @@ export const useGenerateContent = () => {
     const selectedLevel = ref<LevelKey>('Beginner');
 
     const {
-        generateCourseName,
+        generateCourseContent,
         isGeneratingCourseName,
         hasGeneratedCourseName
     } = useCourse()
 
-    const generateCourse = () => generateCourseName(selectedTag.value?.name, selectedLevel.value)
+    const generateCourse = () => generateCourseContent(selectedTag.value?.name, selectedLevel.value)
 
     const router = useRouter();
 
     watchEffect(() => {
-        if (hasGeneratedCourseName.value) router.push('/content/preview');
+        if (hasGeneratedCourseName.value) router.push('/content/courses/edit');
     });
 
     const isLoading = computed(() => loadingTags.value || isGeneratingCourseName.value)

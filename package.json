@@ -14,6 +14,7 @@
     "@nuxtjs/tailwindcss": "^6.11.0",
     "markdown-it-shikiji": "^0.10.0-beta.9",
     "nuxt": "^3.9.3",
+    "sass": "^1.75.0",
     "shikiji": "^0.10.0-beta.9",
     "vue": "^3.4.14",
     "vue-router": "^4.2.5"
@@ -31,7 +32,9 @@
     "openai": "^4.27.0",
     "prismjs": "^1.29.0",
     "slugify": "^1.6.6",
+    "sortablejs": "^1.15.2",
     "vue-prism-editor": "^2.0.0-alpha.2",
+    "vue-sweetalert2": "^5.0.5",
     "vue3-toastify": "^0.2.1"
   }
 }

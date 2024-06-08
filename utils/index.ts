@@ -31,13 +31,14 @@ export class AIClient {
 
     }
 
-    async generateUsingObject(messages: ChatCompletionMessageParam[]) {
+    async generateUsingObject(messages: ChatCompletionMessageParam[], parseJson = true) {
         const respsone = await this._openai.chat.completions.create({
             messages,
             model: "gpt-3.5-turbo",
         });
+        const responseData = respsone.choices[0].message.content as string;
 
-        return JSON.parse(respsone.choices[0].message.content as string);
+        return parseJson ? JSON.parse(responseData) : responseData;
     }
 }
 
@@ -60,17 +61,14 @@ const displayToast = (message: string, type = 'error') => {
 // Modify response interceptor
 http.interceptors.response.use(
     function (response) {
-        // You can customize this logic based on response status or other criteria
-        console.log("Ressponse", response);
-
         if (response.data.message) {
             displayToast(response.data.message, 'success');
         }
-        console.log('error Occurred');
+
         return response;
     },
     function (error) {
-        console.error('Error config:', error.message);
+        displayToast(error.response.data.message);
         return Promise.reject(error);
     }
 );

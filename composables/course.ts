@@ -16,6 +16,12 @@ export function useCourse() {
         modules: []
     });
 
+    const batchData = ref<Record<string, any>>({
+        batch_progress: 0,
+        batch_finished: false,
+        course: null
+    });
+
 
     const isGeneratingCourseName = ref(false);
     const hasGeneratedCourseName = ref(false);
@@ -73,6 +79,15 @@ export function useCourse() {
 
     }
 
+    const checkBatchProgress = async (query: Record<string, string>) => {
+        const res = (await http.get(`/batch-job/progress/${query.batchid}/${query.courseid}`)).data;
+        if (res.batch_finished) {
+            course.value = res.course;
+        }
+
+        batchData.value = res;
+    }
+
     const contentPrompt = (key: ContentKey): string => {
         const courseContentPrompt = {
             name: reqenerateContent(course.value.name),
@@ -89,12 +104,14 @@ export function useCourse() {
         courses,
         loaded,
         loading,
+        batchData,
         saveCourse,
         regenerated,
         regenerating,
         fetchCourses,
         currentCourse,
         regenerateCourse,
+        checkBatchProgress,
         generateCourseContent,
         currentCourseIndex,
         isGeneratingCourseName,

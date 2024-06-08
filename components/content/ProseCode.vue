@@ -3,7 +3,7 @@
         <span v-if="filename" class="filename-text">
             {{ filename }}
         </span>
-        <span v-if="languageText" :style="{ background: languageBackground, color: languageColor }"
+        <span v-if="languageText" :style="{ background: languageBackground, color: languageColor } as StyleValue"
             class="language-text">
             {{ languageText }}
         </span>
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core';
+import type { StyleValue } from 'vue';
 
 const { copy, copied, text } = useClipboard();
 

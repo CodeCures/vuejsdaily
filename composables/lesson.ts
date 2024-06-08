@@ -11,9 +11,10 @@ export const useLesson = () => {
         generatedContent.value = false;
 
         const { $ai } = useNuxtApp();
-        const res = await $ai.generateContent(generateLessonContentPrompt(courseName, lesson.name))
+        const res = await $ai.generateUsingObject(generateLessonContentPrompt(courseName, lesson.name), false)
+        console.log(res);
 
-        lesson.content = res.choices[0].message.content;
+        lesson.content = res;
 
         generatingContent.value = false;
         generatedContent.value = true;

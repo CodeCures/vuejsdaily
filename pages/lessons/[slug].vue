@@ -11,7 +11,6 @@ let content = await markdownParser.parse('', selectedLesson.value?.content ?? ''
 watch(selectedLesson, async (newValue, oldValue) => {
     if (!oldValue.content || newValue.content === oldValue.content) return;
     content = await markdownParser.parse('', selectedLesson.value.content ?? '', {})
-    console.log('this is fired onMounted');
 
 })
 
@@ -25,7 +24,6 @@ watch(selectedLesson, async (newValue, oldValue) => {
                     <h4 class="text-4xl uppercase font-bold tracking-wider text-gray-700">No Content Found! </h4>
                 </div>
             </template>
-            <!-- <ShikiMarkdown v-else :content="selectedLesson.content" /> -->
             <ContentRendererMarkdown :value="content" />
         </ClientOnly>
     </div>

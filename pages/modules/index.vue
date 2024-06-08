@@ -1,7 +1,6 @@
 <script setup lang="ts">
-const moduleStore = useModuleStore();
-const { modules } = storeToRefs(moduleStore);
-moduleStore.getModules();
+
+const { courseModules: modules } = useCourseModule()
 
 const filter = ref('');
 const filteredModules = computed(() => {
@@ -22,7 +21,8 @@ const filteredModules = computed(() => {
         <div class="p-5 w-4/5 h-[80vh] overflow-y-auto border-[.5px] border-gray-700 shadow-2xl grid grid-cols-4 gap-5">
             <ClientOnly>
                 <Suspense>
-                    <ModuleCard v-for="(module, index) in filteredModules" :key="index" :module="module" :index="index" />
+                    <ModuleCard v-for="(module, index) in filteredModules" :key="index" :module="module"
+                        :index="index" />
                     <template #fallback>
                         this is the fallback
                     </template>

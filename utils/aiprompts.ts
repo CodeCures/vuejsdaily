@@ -5,7 +5,7 @@ const excludeUnwantedValues: string = `do not add any additional text before or 
 
 export function generateCourseContentPrompt(technology: string, level: string) {
     return [
-        { role: "system", content: `Generate a ${level}-friendly course name for learning ${technology}. Return the response in JSON format with the structure: { courseName: 'namestring', modules: [ { name: 'moduleName', lessons: [ {name: 'lessonName', content: null} ] } ] }` },
+        { role: "system", content: `Generate a ${level}-friendly course name for learning ${technology}. Return the response in JSON format with the structure: { name: 'courseName', meta_description: 'meta_description', meta_keywords: 'meta_keywords', description: 'description', modules: [ { name: 'moduleName', description: 'moduleDescription', lessons: [ {name: 'lessonName', content: null} ] } ] } the value of lesson content should strictly null` },
         { role: "user", content: `Generate a ${level}-friendly course name for learning ${technology}. The course should appeal to individuals with basic knowledge of web development and aim to teach them fundamental ${technology} concepts in an accessible way.` },
         { role: "system", content: `Create a structured outline for a ${level}-friendly ${technology} course.` },
         { role: "user", content: `Create a structured outline for a ${level}-friendly ${technology} course. The course should be divided into modules, each covering essential concepts and techniques in ${technology}. Focus on providing clear explanations and practical examples to help learners grasp the material effectively.` },
@@ -43,7 +43,21 @@ export function moduleContentPrompt(index: number, moduleName: string, courseNam
     return `${moduleName} is a module in ${courseName}. generate module content${tailoredTo} that contains description, meta_description, lessons array keys. the generate content must be a javascript object with the following structure {description: string, meta_description: string, lessons: string[]}. ${excludeUnwantedValues}`
 }
 
-export function generateLessonContentPrompt(courseName: string, lessonName: string): string {
-    return `you are creating lessons for ${courseName}, generate an indepth lesson content for ${lessonName}. the content generated should be fun to read, engaging and interactive. should content must really teach about everything that has to do with ${lessonName}. the generated content should be in markdown. return only the markdown content generated`;
+export function generateLessonContentPrompt(courseName: string, lessonName: string): ChatCompletionMessageParam[] {
+    return [{
+        role: "system",
+        content: `
+        Write an engaging and interactive lesson titled "${lessonName}" for the course "${courseName}". The lesson should provide a captivating introduction to ${lessonName}, capturing the reader's interest from the beginning.
+        - Start with a compelling opening that highlights the importance and relevance of ${lessonName} in ${courseName} development.
+        - Introduce ${lessonName} in a way that is accessible to beginners, explaining its key features and advantages over other frameworks.
+        - Use storytelling techniques or real-world examples to illustrate how ${lessonName} can solve common challenges faced by developers working with ${courseName}.
+        - Incorporate interactive elements such as code snippets, demos, or interactive exercises to keep the reader engaged and encourage hands-on learning. Ensure that all code examples are written in Vue 3 script setup style.
+        - Break down complex concepts into digestible chunks, using clear explanations and visual aids to enhance understanding.
+        - Provide opportunities for readers to apply what they've learned through practical exercises or projects related to ${lessonName} in the context of ${courseName}.
+        - Conclude the lesson with a summary of key points and a teaser for what they'll learn in the next lesson of ${courseName}.
+        - Generate the content in the style of an engaging article or blog post, with storytelling elements, engaging visuals, and a conversational tone to keep the reader interested.
+        Return the response in Markdown format, ensuring proper formatting for headings, lists, code blocks, and other elements to enhance readability.
+`
+    }] as ChatCompletionMessageParam[];
 }
 

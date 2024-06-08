@@ -1,4 +1,4 @@
-import type { IModule } from "~/types"
+import type { ICourse, IModule } from "~/types"
 export const useCourseModule = () => {
 
     const { course } = useCourse()
@@ -24,13 +24,13 @@ export const useCourseModule = () => {
 
     const router = useRouter();
     const creatingLessons = ref(false);
-    const onCompleteModule = async () => {
+    const onCompleteModule = async (course: ICourse) => {
         creatingLessons.value = true;
 
-        await http.post('/modules-lessons', { modules: courseModules.value });
+        const res = (await http.post('/course/modules/lessons', course)).data;
         creatingLessons.value = false;
 
-        router.push('/modules')
+        router.push(`/content/courses/prepare?batchid=${res.batch_id}&courseid=${res.course_id}`);
     }
 
     return {

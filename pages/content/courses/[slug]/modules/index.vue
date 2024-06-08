@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const {
     hasContent,
     courseModules,
@@ -9,67 +10,85 @@ const {
     isGeneratingContent,
     generateModuleContent,
 } = useCourseModule()
+
+const { course } = useCourse()
+
+const items = [{
+    key: 'course',
+    label: 'Edit Course',
+    description: 'Make changes to your course content here. Click save when you\'re done.'
+}, {
+    key: 'modules',
+    label: 'Edit Modules',
+    description: 'Edit the course modules here. Click save when you are done.'
+}]
+
+function onDeleteLesson(e: { moduleIndex: number, lessonIndex: number }) {
+    course.value.modules[e.moduleIndex].lessons.splice(e.lessonIndex, 1);
+}
+
+const isOpen = ref(false);
+
 </script>
 
 <template>
     <div class="h-screen w-full flex items-center justify-center overflow-y-hidden">
-        <UCard class="w-[600px] max-h-full overflow-y-auto">
-            <Suspense>
-                <ClientOnly>
-                    <UAccordion :items="courseModules">
-                        <template #default="{ item, index, open }">
-                            <UButton color="gray" variant="ghost" class="border-b border-gray-200 dark:border-gray-700"
-                                :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }">
-                                <template #leading>
-                                    <div class="w-6 h-6 rounded-full flex items-center justify-center -my-1"
-                                        :class="hasContent(item) ? 'bg-primary-500 dark:bg-primary-400' : 'bg-red-500 dark:bg-red-400'">
-                                        <UIcon
-                                            :name="hasContent(item) ? 'i-heroicons-check-badge' : 'i-heroicons-lock-closed-20-solid'"
-                                            class="w-4 h-4 text-white dark:text-gray-900" />
-                                    </div>
-                                </template>
-
-                                <span class="truncate">{{ index + 1 }}. {{ item.name }}</span>
-
-                                <template #trailing>
-                                    <UIcon name="i-heroicons-chevron-right-20-solid"
-                                        class="w-5 h-5 ms-auto transform transition-transform duration-200"
-                                        :class="[open && 'rotate-90']" />
-                                </template>
-                            </UButton>
-                        </template>
-                        <template #item="{ item, index }">
-                            <template v-if="hasContent(item)">
-                                <UForm :state="{}" class="space-y-3">
-                                    <UFormGroup>
-                                        <UTextarea resize placeholder="Description" v-model="item.description" />
-                                    </UFormGroup>
-                                    <LessonField :lessons="item.lessons" :index="index" @update-lessons="onUpdateLessons" />
-
-                                    <UFormGroup class="h-3" />
-                                    <hr class="border-gray-500 w-full pb-3">
-                                </UForm>
+        <ClientOnly>
+            <UCard class="w-[600px] h-[98%] max-h-full">
+                <UTabs :items="items" class="w-full h-full">
+                    <template #item="{ item }">
+                        <UCard class="h-full">
+                            <template #header>
+                                <h4
+                                    class="text-base font-semibold leading-6 text-gray-900 dark:text-white flex justify-between">
+                                    {{ item.label }}
+                                    <UButton v-if="item.key === 'modules'" size="xs" color="blue"
+                                        @click="isOpen = true">Add Module</UButton>
+                                </h4>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    {{ item.description }}
+                                </p>
                             </template>
-                            <template v-else>
-                                <div class="h-[150px] flex flex-col items-center justify-center space-y-5">
-                                    <h4 class="text-2xl font-bold tracking-wider">
-                                        {{ isGeneratingContent(index) ? 'Preparing module content' : 'No Content Found!' }}
-                                    </h4>
-                                    <UButton :loading="isGeneratingContent(index)" @click="generateModuleContent(index)"
-                                        block>
-                                        {{ isGeneratingContent(index) ? 'Generating' : 'Generate' }} Content
-                                    </UButton>
-                                </div>
+
+                            <div v-if="item.key === 'course'" class="space-y-3 h-[60vh] overflow-y-auto">
+                                <UFormGroup label="Course Name">
+                                    <UInput placeholder="Search..." icon="i-heroicons-envelope" v-model="course.name" />
+                                </UFormGroup>
+
+                                <UFormGroup label="Meta Keywords">
+                                    <UInput placeholder="Search..." icon="i-heroicons-envelope"
+                                        v-model="course.meta_keywords" />
+                                </UFormGroup>
+
+                                <UFormGroup label="Meta Description">
+                                    <UTextarea resize placeholder="Search..." v-model="course.meta_description" />
+                                </UFormGroup>
+
+                                <UFormGroup label="Description">
+                                    <UTextarea resize placeholder="Search..." v-model="course.description" />
+                                </UFormGroup>
+                            </div>
+                            <div v-else-if="item.key === 'modules'" class="space-y-3 h-[60vh] overflow-y-auto">
+                                <EditModulesComponent :course-modules="course.modules"
+                                    @delete-lesson="onDeleteLesson" />
+                            </div>
+
+                            <template #footer>
+                                <hr class="pt-3 border-t-[.5px] border-gray-800">
+                                <UButton :loading="creatingLessons" :disabled="hasEmptyModule" block
+                                    @click="onCompleteModule(course)">
+                                    {{ `Complete ${hasEmptyModule ? 'modules to continue' : ''}` }}
+                                </UButton>
                             </template>
-                        </template>
-                    </UAccordion>
-                    <hr class="pt-3 border-t-[.5px] border-gray-800">
-                    <UButton :loading="creatingLessons" :disabled="hasEmptyModule" block @click="onCompleteModule">
-                        {{ `Complete ${hasEmptyModule ? 'modules to continue' : ''}` }}
-                    </UButton>
-                </ClientOnly>
-            </Suspense>
-        </UCard>
+                        </UCard>
+                    </template>
+                </UTabs>
+            </UCard>
+        </ClientOnly>
+        <UModal v-model="isOpen">
+            <div class="p-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, dicta?
+            </div>
+        </UModal>
     </div>
 </template>
-
