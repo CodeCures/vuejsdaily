@@ -3,11 +3,12 @@ export default {
   ccontent: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.{js,ts}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
   darkMode: 'class',
 }
 

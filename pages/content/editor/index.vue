@@ -22,10 +22,10 @@ const {
 } = useEditorConfig()
 
 const parsedContent = ref<ParsedContent>();
-parsedContent.value = await markdownParser.parse('', currentLesson.value?.content ?? '', {});
+parsedContent.value = await markdownParser?.parse?.('', currentLesson.value?.content ?? '', {});
 
 const parseMarkdown = async (content: any) => {
-    parsedContent.value = await markdownParser.parse('', content, {});
+    parsedContent.value = await markdownParser?.parse?.('', content, {});
 };
 
 const debouncedParseMarkdown = debounce(parseMarkdown, 300);
